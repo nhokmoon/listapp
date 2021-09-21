@@ -10,16 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'welcome to flutter',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('welcome to flutter'),
-        ),
-        body: const Center(
-          child: RandomWords(),
-        ),
-      ),
+      home: RandomWords(),
     );
   }
 }
@@ -31,25 +24,40 @@ class RandomWords extends StatefulWidget {
   _RandomWordsState createState() => _RandomWordsState();
 }
 
-class _RandomWordsState extends State<RandomWords>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class _RandomWordsState extends State<RandomWords> {
+  final _suggestions = <WordPair>[];
+  final _bigerFont = const TextStyle(fontSize: 18.0);
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
+  Widget _buildSuggestions() {
+    return ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemBuilder: (context, i) {
+          if (i.isOdd) return const Divider();
+
+          final index = i ~/ 2;
+          if (index >= _suggestions.length) {
+            _suggestions.addAll(generateWordPairs().take(10));
+          }
+          return _buildRow(_suggestions[index]);
+        });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
+  Widget _buildRow(WordPair pair) {
+    return ListTile(
+      title: Text(
+        pair.asPascalCase,
+        style: _bigerFont,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final wordPair = WordPair.random();
-    return Text(wordPair.asPascalCase);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('starup'),
+      ),
+      body: _buildSuggestions(),
+    );
   }
 }
