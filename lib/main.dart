@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
@@ -28,6 +30,23 @@ class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
   final _bigerFont = const TextStyle(fontSize: 18.0);
   final _save = <WordPair>{};
+  void _pushSave() {
+    Navigator.of(context).push(MaterialPageRoute<Void>(
+      builder: (BuildContext context) {
+      final Title = _save.map(
+        (WordPair pair){
+          return ListTile(
+            title: Text(
+              pair.asPascalCase,
+              style: _bigerFont,
+            ),
+          );
+        }
+      );
+      final 
+    }
+    ));
+  }
 
   Widget _buildSuggestions() {
     return ListView.builder(
@@ -71,6 +90,12 @@ class _RandomWordsState extends State<RandomWords> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('starup'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.list),
+            onPressed: _pushSave,
+          )
+        ],
       ),
       body: _buildSuggestions(),
     );
